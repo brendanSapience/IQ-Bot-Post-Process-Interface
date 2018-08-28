@@ -1,12 +1,11 @@
 setSocketListeners();
 
 $(document).ready(function(){
-	console.log("Here!")
+
+	// When html page loads, retrieve the content of the JSON file that determines the labels for each field.
 	socket.emit('get_structure',{});
 
-
-
-
+	// When clicking the Save Fields button, save the labels as a JSON structure and override the existing one (by passing it to the server)
 	$('#save-button').click( function(e) { 
 		var JsonStructure = "{"+
 		'"titleid1":'+'"'+$('#field1id').text()+'",'+
@@ -22,33 +21,33 @@ $(document).ready(function(){
 
 	});
 	
-		$('#save-data-button').click( function(e) {
-		console.log("dsfsdf") 
-			var newRowContent = "<tr>"+
-				"<td>"+$('#field1').val()+"</td>"+
-				"<td>"+$('#field2').val()+"</td>"+
-				"<td>"+$('#field3').val()+"</td>"+
-				"<td>"+$('#field4').val()+"</td>"+
-				"<td>"+$('#field5').val()+"</td>"+
-				"<td>"+$('#field6').val()+"</td>"+
-				"</tr>";
+// When clicking the Save Record button, we update the table (no server side action needed here)
+	$('#save-data-button').click( function(e) {
+		var newRowContent = "<tr>"+
+			"<td>"+$('#field1').val()+"</td>"+
+			"<td>"+$('#field2').val()+"</td>"+
+			"<td>"+$('#field3').val()+"</td>"+
+			"<td>"+$('#field4').val()+"</td>"+
+			"<td>"+$('#field5').val()+"</td>"+
+			"<td>"+$('#field6').val()+"</td>"+
+			"</tr>";
 
-			$("#datatable tbody").append(newRowContent);
+		$("#datatable tbody").append(newRowContent);
 
-			$('#field1').val("");
-			$('#field2').val("");
-			$('#field3').val("");
-			$('#field4').val("");
-			$('#field5').val("");
-			$('#field6').val("");
+		$('#field1').val("");
+		$('#field2').val("");
+		$('#field3').val("");
+		$('#field4').val("");
+		$('#field5').val("");
+		$('#field6').val("");
 
-	    
 	});
 
 });
 
 function setSocketListeners(){ 
 
+	// On receiving the content of the JSON file, we update all labels
 	socket.on('structure_sent',function(result){
 		console.log(result);
 
@@ -58,18 +57,10 @@ function setSocketListeners(){
 		$('#field4id').text(result["titleid4"]);$('#col4').text(result["titleid4"]);
 		$('#field5id').text(result["titleid5"]);$('#col5').text(result["titleid5"]);
 		$('#field6id').text(result["titleid6"]);$('#col6').text(result["titleid6"]);
-
-
-
 	});
+
 
 	socket.on('server_side_error',function(result){
-		console.log(result);
+		console.log("Error on server:"+result);
 	});
 };
-
-
-function StartBTSearch(cookies,keyword) {socket.emit('StartBTSearch',{'cookies':cookies,'keyword':keyword});}
-function RefreshDownloads(cookies) {socket.emit('getDownloads',cookies);}
-function RunVPNCheck(cookies) {socket.emit('getVPNInfo',cookies);}
-function AddMagnetLinkToDownloads(cookies, MagnetLink){socket.emit('AddMagnetLink',{'cookies':cookies, 'link': MagnetLink});}
